@@ -1,0 +1,43 @@
+#pragma kernel CSMain
+static const int threadGroupSize = 1024;
+
+struct Jelly {
+    float3 position;
+    float3 direction;
+
+    float3 separationDirection;
+    float3 separationStrength;
+    float3 alignmentDirection;
+    float3 cohesionDirection;
+};
+
+RWStructuredBuffer<Jelly> jellys;
+int numJelly;
+float separationRadius;
+float alignmentRadius;
+float cohesionRadius;
+
+
+[numthreads(threadGroupSize,1,1)]
+void CSMain (int id : SV_DispatchThreadID)
+{
+    for (int indexB = 0; indexB < numJelly; indexB ++) {
+        if (id.x != indexB) {
+            Jelly jellyB = jellys[indexB];
+            float3 offset = jellyB.position - jellys[id.x].position;
+            float sqrDist = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
+
+            if (sqrDist < alignmentRadius * alignmentRadius) {
+                jellys[id.x].separationDirection -= jellyB.direction;
+
+                if (sqrDist < cohesionRadius * cohesionRadius) {
+                    jellys[id.x].cohesionDirection += jellyB.direction;
+
+                    if (sqrDist < separationRadius * separationRadius) {
+                        jellys[id.x].alignmentDirection += jellyB.direction;
+                    }
+                }
+            }
+        }
+    }
+}

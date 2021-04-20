@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3559297176007848099
+--- !u!1 &6417400630627561056
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,43 +8,43 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3559297176007848097}
-  - component: {fileID: 3559297176007848096}
+  - component: {fileID: 5322001000254593449}
+  - component: {fileID: -8470947358889196245}
   m_Layer: 0
-  m_Name: Spawner
+  m_Name: JellySpawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3559297176007848097
+--- !u!4 &5322001000254593449
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3559297176007848099}
+  m_GameObject: {fileID: 6417400630627561056}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.88, y: 4.74, z: -5.94}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3559297176007848096
+--- !u!114 &-8470947358889196245
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3559297176007848099}
+  m_GameObject: {fileID: 6417400630627561056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 351b357d8278b4b8da32f976c630e4af, type: 3}
+  m_Script: {fileID: 11500000, guid: be9eb7dd992eb0b5fbb1a5d65bdbf6b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2931604500597588581, guid: a68eabc10bd1b4dcaa03efa0e2052ddb, type: 3}
-  spawnRadius: 4
-  spawnCount: 80
-  colour: {r: 1, g: 1, b: 1, a: 1}
+  prefab: {fileID: 7793104448085377588, guid: b11e6c1435d4cbfd4b16bf673d742fb4, type: 3}
+  spawnRadius: 10
+  spawnCount: 10
+  colour: {r: 0.15801886, g: 0.44001013, b: 0.5, a: 0}
   showSpawnRegion: 2
