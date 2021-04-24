@@ -1,33 +1,10 @@
 {
   "dependencies": {
-    "com.unity.2d.sprite": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
-    },
-    "com.unity.2d.tilemap": {
-      "version": "1.0.0",
-      "depth": 0,
-      "source": "builtin",
-      "dependencies": {}
-    },
-    "com.unity.ads": {
-      "version": "3.5.2",
+    "com.unity.cinemachine": {
+      "version": "2.7.3",
       "depth": 0,
       "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0"
-      },
-      "url": "https://packages.unity.com"
-    },
-    "com.unity.analytics": {
-      "version": "3.5.3",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.ugui": "1.0.0"
-      },
+      "dependencies": {},
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
@@ -67,18 +44,52 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.purchasing": {
-      "version": "3.0.1",
-      "depth": 0,
-      "source": "registry",
+    "com.unity.render-pipelines.core": {
+      "version": "11.0.0",
+      "depth": 1,
+      "source": "builtin",
       "dependencies": {
         "com.unity.ugui": "1.0.0",
-        "com.unity.modules.unityanalytics": "1.0.0",
-        "com.unity.modules.unitywebrequest": "1.0.0",
-        "com.unity.modules.jsonserialize": "1.0.0",
-        "com.unity.modules.androidjni": "1.0.0"
-      },
+        "com.unity.modules.physics": "1.0.0"
+      }
+    },
+    "com.unity.render-pipelines.high-definition": {
+      "version": "11.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.video": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.imageconversion": "1.0.0",
+        "com.unity.render-pipelines.core": "11.0.0",
+        "com.unity.shadergraph": "11.0.0",
+        "com.unity.visualeffectgraph": "11.0.0",
+        "com.unity.render-pipelines.high-definition-config": "11.0.0"
+      }
+    },
+    "com.unity.render-pipelines.high-definition-config": {
+      "version": "11.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "11.0.0"
+      }
+    },
+    "com.unity.searcher": {
+      "version": "4.3.2",
+      "depth": 2,
+      "source": "registry",
+      "dependencies": {},
       "url": "https://packages.unity.com"
+    },
+    "com.unity.shadergraph": {
+      "version": "11.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.render-pipelines.core": "11.0.0",
+        "com.unity.searcher": "4.3.1"
+      }
     },
     "com.unity.sysroot": {
       "version": "0.1.19-preview",
@@ -146,6 +157,30 @@
         "com.unity.modules.ui": "1.0.0",
         "com.unity.modules.imgui": "1.0.0"
       }
+    },
+    "com.unity.visualeffectgraph": {
+      "version": "11.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.shadergraph": "11.0.0",
+        "com.unity.render-pipelines.core": "11.0.0"
+      }
+    },
+    "com.unity.visualscripting": {
+      "version": "1.5.2",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.ugui": "1.0.0",
+        "com.unity.modules.ai": "1.0.0",
+        "com.unity.modules.animation": "1.0.0",
+        "com.unity.modules.jsonserialize": "1.0.0",
+        "com.unity.modules.particlesystem": "1.0.0",
+        "com.unity.modules.physics": "1.0.0",
+        "com.unity.modules.physics2d": "1.0.0"
+      },
+      "url": "https://packages.unity.com"
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",

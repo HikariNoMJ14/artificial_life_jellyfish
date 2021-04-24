@@ -15,8 +15,8 @@ public class JellyfishSettings : ScriptableObject {
     public float alignmentRadius = baseRadius * .6f;
     public float cohesionRadius = baseRadius * .4f;
 
-    public float separateWeight = 0;
-    public float alignmentWeight = 1;
+    public float separateWeight = 0.5f;
+    public float alignmentWeight = 0.2f;
     public float cohesionWeight = 1;
 
 }

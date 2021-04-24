@@ -6,7 +6,6 @@ struct Jelly {
     float3 direction;
 
     float3 separationDirection;
-    float3 separationStrength;
     float3 alignmentDirection;
     float3 cohesionDirection;
 };

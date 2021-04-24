@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/boids_fish.iml" filepath="$PROJECT_DIR$/.idea/boids_fish.iml" />
+      <module fileurl="file://$USER_HOME$/Downloads/Boids-master/.idea/Boids-master.iml" filepath="$USER_HOME$/Downloads/Boids-master/.idea/Boids-master.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/Jellyfish.iml" filepath="$PROJECT_DIR$/.idea/Jellyfish.iml" />
     </modules>
   </component>
 </project>

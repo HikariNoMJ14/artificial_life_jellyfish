@@ -31,11 +31,13 @@ public class JellyfishManager : MonoBehaviour {
                 jellyfishData[i].direction = jellyfish[i].forward;
             }
 
+            //Debug.Log("pre-compute shader");
+
             var jellyfishBuffer = new ComputeBuffer (numJellyfish, JellyfishData.Size);
             jellyfishBuffer.SetData (jellyfishData);
 
             compute.SetBuffer (0, "jellys", jellyfishBuffer);
-            compute.SetInt ("numJelly", jellyfish.Length);
+            compute.SetInt ("numJelly", numJellyfish);
             compute.SetFloat ("separationRadius", settings.separationRadius);
             compute.SetFloat ("alignmentRadius", settings.alignmentRadius);
             compute.SetFloat ("cohesionRadius", settings.cohesionRadius);
@@ -46,12 +48,13 @@ public class JellyfishManager : MonoBehaviour {
 
             for (int i = 0; i < jellyfish.Length; i++) {
                 jellyfish[i].separationDirection = jellyfishData[i].separationDirection;
-                //jellyfish[i].separationStrength = jellyfishData[i].separationStrength;
                 jellyfish[i].alignmentDirection = jellyfishData[i].alignmentDirection;
                 jellyfish[i].cohesionDirection = jellyfishData[i].cohesionDirection;
 
                 jellyfish[i].UpdateJellyfish ();
             }
+
+            //Debug.Log("post-compute shader");
 
             jellyfishBuffer.Release ();
         }

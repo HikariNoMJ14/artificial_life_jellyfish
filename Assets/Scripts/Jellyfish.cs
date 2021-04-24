@@ -18,8 +18,6 @@ public class Jellyfish : MonoBehaviour {
     [HideInInspector]
     public Vector3 separationDirection;
     [HideInInspector]
-    public float separationStrength;
-    [HideInInspector]
     public Vector3 alignmentDirection;
     [HideInInspector]
     public Vector3 cohesionDirection;
@@ -28,8 +26,26 @@ public class Jellyfish : MonoBehaviour {
     Material material;
     Transform cachedTransform;
 
+    public void GetGlowOffset() {
+        return material.GetFloat("GlowOffset");
+    }
+
+    public void SetGlowOffset(offset) {
+        material.SetFloat("GlowOffset", offset);
+    }
+
+    public void GetColour() {
+        return material.GetFloat("_Color");
+    }
+
+    public void SetColour(Color color) {
+        material.SetFloat("_Color", color);
+    }
+
     void Awake () {
-        material = transform.GetComponentInChildren<MeshRenderer> ().material;
+        material = transform.GetComponentInChildren<Renderer> ().material;
+        SetGlowOffset(Random.Range(0.0f, 1.0f));
+
         cachedTransform = transform;
     }
 
@@ -39,14 +55,8 @@ public class Jellyfish : MonoBehaviour {
         position = cachedTransform.position;
         forward = cachedTransform.forward;
 
-        float startSpeed = 0.1f;
+        float startSpeed = (settings.minSpeed + settings.maxSpeed) / 2;
         velocity = transform.forward * startSpeed;
-    }
-
-    public void SetColour (Color col) {
-        if (material != null) {
-            material.color = col;
-        }
     }
 
     public void UpdateJellyfish () {
@@ -74,6 +84,8 @@ public class Jellyfish : MonoBehaviour {
         cachedTransform.forward = dir;
         position = cachedTransform.position;
         forward = dir;
+
+        //Debug.DrawRay(position, forward);
     }
 
     Vector3 SteerTowards (Vector3 vector) {
