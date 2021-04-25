@@ -18,5 +18,6 @@ public class JellyfishSettings : ScriptableObject {
     public float separateWeight = 0.5f;
     public float alignmentWeight = 0.2f;
     public float cohesionWeight = 1;
+    public float synchronizeWeight = 0.001f;
 
 }

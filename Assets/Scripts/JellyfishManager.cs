@@ -29,15 +29,16 @@ public class JellyfishManager : MonoBehaviour {
             for (int i = 0; i < jellyfish.Length; i++) {
                 jellyfishData[i].position = jellyfish[i].position;
                 jellyfishData[i].direction = jellyfish[i].forward;
-            }
 
-            //Debug.Log("pre-compute shader");
+                jellyfishData[i].glowOffset = jellyfish[i].GetGlowOffset();
+            }
 
             var jellyfishBuffer = new ComputeBuffer (numJellyfish, JellyfishData.Size);
             jellyfishBuffer.SetData (jellyfishData);
 
             compute.SetBuffer (0, "jellys", jellyfishBuffer);
             compute.SetInt ("numJelly", numJellyfish);
+            compute.SetFloat ("neighborhoodRadius", settings.neighborhoodRadius);
             compute.SetFloat ("separationRadius", settings.separationRadius);
             compute.SetFloat ("alignmentRadius", settings.alignmentRadius);
             compute.SetFloat ("cohesionRadius", settings.cohesionRadius);
@@ -51,6 +52,9 @@ public class JellyfishManager : MonoBehaviour {
                 jellyfish[i].alignmentDirection = jellyfishData[i].alignmentDirection;
                 jellyfish[i].cohesionDirection = jellyfishData[i].cohesionDirection;
 
+                jellyfish[i].numFlockmates = jellyfishData[i].numFlockmates;
+                jellyfish[i].glowStimulus = jellyfishData[i].glowStimulus;
+
                 jellyfish[i].UpdateJellyfish ();
             }
 
@@ -63,14 +67,18 @@ public class JellyfishManager : MonoBehaviour {
     public struct JellyfishData {
         public Vector3 position;
         public Vector3 direction;
+        public float glowOffset;
 
         public Vector3 separationDirection;
         public Vector3 alignmentDirection;
         public Vector3 cohesionDirection;
 
+        public int numFlockmates;
+        public float glowStimulus;
+
         public static int Size {
             get {
-                return sizeof (float) * 3 * 5;
+                return sizeof (float) * 3 * 5 + sizeof (float) * 2 + sizeof (int);
             }
         }
     }

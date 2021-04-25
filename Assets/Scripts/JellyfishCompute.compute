@@ -4,14 +4,19 @@ static const int threadGroupSize = 1024;
 struct Jelly {
     float3 position;
     float3 direction;
+    float glowOffset;
 
     float3 separationDirection;
     float3 alignmentDirection;
     float3 cohesionDirection;
+
+    int numFlockmates;
+    float glowStimulus;
 };
 
 RWStructuredBuffer<Jelly> jellys;
 int numJelly;
+float neighborhoodRadius;
 float separationRadius;
 float alignmentRadius;
 float cohesionRadius;
@@ -28,14 +33,16 @@ void CSMain (int id : SV_DispatchThreadID)
 
             if (sqrDist < alignmentRadius * alignmentRadius) {
                 jellys[id.x].separationDirection -= jellyB.direction;
-
-                if (sqrDist < cohesionRadius * cohesionRadius) {
-                    jellys[id.x].cohesionDirection += jellyB.direction;
-
-                    if (sqrDist < separationRadius * separationRadius) {
-                        jellys[id.x].alignmentDirection += jellyB.direction;
-                    }
-                }
+            }
+            if (sqrDist < cohesionRadius * cohesionRadius) {
+                jellys[id.x].cohesionDirection += jellyB.direction;
+            }
+            if (sqrDist < separationRadius * separationRadius) {
+                jellys[id.x].alignmentDirection += jellyB.direction;
+            }
+            if (sqrDist < neighborhoodRadius * neighborhoodRadius) {
+                jellys[id.x].numFlockmates += 1;
+                jellys[id.x].glowStimulus += jellyB.glowOffset;
             }
         }
     }

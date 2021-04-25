@@ -9,7 +9,8 @@ public class JellySpawner : MonoBehaviour {
     public Jellyfish prefab;
     public float spawnRadius = 10;
     public int spawnCount = 10;
-    public Color colour;
+    public float saturation = 0.71f;
+    public float brightness = 1f;
     public GizmoType showSpawnRegion;
 
     void Awake () {
@@ -20,9 +21,10 @@ public class JellySpawner : MonoBehaviour {
             //jellyfish.transform.forward = Random.insideUnitSphere;
 
             //Debug.Log(jellyfish.transform.forward);
-            jellyfish.transform.forward = new Vector3(Random.Range(-1.0f,1.0f), 1, Random.Range(0-1.0f,1.0f)).normalized;
+            jellyfish.transform.forward = new Vector3(Random.Range(-.5f,.5f), 1, Random.Range(-.5f,.5f)).normalized;
 
-            jellyfish.SetColour (colour);
+            jellyfish.SetColour(Random.Range(0.0f, 1.0f), saturation, brightness);
+            jellyfish.SetGlowOffset(Random.Range(-1.0f, 1.0f));
         }
     }
 
@@ -39,8 +41,7 @@ public class JellySpawner : MonoBehaviour {
     }
 
     void DrawGizmos () {
-
-        Gizmos.color = new Color (colour.r, colour.g, colour.b, 0.3f);
+        Gizmos.color = Color.HSVToRGB(0.5f, saturation, brightness);
         Gizmos.DrawSphere (transform.position, spawnRadius);
     }
 

@@ -21,31 +21,36 @@ public class Jellyfish : MonoBehaviour {
     public Vector3 alignmentDirection;
     [HideInInspector]
     public Vector3 cohesionDirection;
+    [HideInInspector]
+    public int numFlockmates;
+    [HideInInspector]
+    public float glowStimulus;
+
 
     // Cached
     Material material;
     Transform cachedTransform;
 
-    public void GetGlowOffset() {
+    public float GetGlowOffset() {
         return material.GetFloat("GlowOffset");
     }
 
-    public void SetGlowOffset(offset) {
+    public void SetGlowOffset(float offset) {
         material.SetFloat("GlowOffset", offset);
     }
 
-    public void GetColour() {
-        return material.GetFloat("_Color");
+    public float GetColour() {
+       return material.GetColor("_Color")[0];
     }
 
-    public void SetColour(Color color) {
-        material.SetFloat("_Color", color);
+    public void SetColour(float hue, float saturation, float brightness) {
+        Color clr =  Color.HSVToRGB(hue, saturation, brightness);
+
+        material.SetColor("_Color", clr);
     }
 
     void Awake () {
         material = transform.GetComponentInChildren<Renderer> ().material;
-        SetGlowOffset(Random.Range(0.0f, 1.0f));
-
         cachedTransform = transform;
     }
 
@@ -62,17 +67,21 @@ public class Jellyfish : MonoBehaviour {
     public void UpdateJellyfish () {
         Vector3 acceleration = Vector3.zero;
 
-       // if (numFlockmates != 0) { // TODo restore?
-        var separationForce = SteerTowards (separationDirection) * settings.separateWeight; // TODO use separation strength
-        var alignmentForce = SteerTowards (alignmentDirection) * settings.alignmentWeight;
-        var cohesionForce = SteerTowards (cohesionDirection) * settings.cohesionWeight;
+        if (numFlockmates != 0) {
+            var separationForce = SteerTowards (separationDirection) * settings.separateWeight; // TODO use separation strength
+            var alignmentForce = SteerTowards (alignmentDirection) * settings.alignmentWeight;
+            var cohesionForce = SteerTowards (cohesionDirection) * settings.cohesionWeight;
 
-        acceleration += alignmentForce;
-        acceleration += cohesionForce;
-        acceleration += separationForce;
-        //} else {
+            acceleration += alignmentForce;
+            acceleration += cohesionForce;
+            acceleration += separationForce;
+
+            float synchronizatonForce = Synchronize(glowStimulus / numFlockmates) * settings.synchronizeWeight;
+            float newGlowOffset = synchronizatonForce + this.GetGlowOffset();
+            this.SetGlowOffset(newGlowOffset);
+        } else {
             // TODO add random movement
-        //}
+        }
 
         velocity += acceleration * Time.deltaTime;
         float speed = velocity.magnitude;
@@ -84,12 +93,14 @@ public class Jellyfish : MonoBehaviour {
         cachedTransform.forward = dir;
         position = cachedTransform.position;
         forward = dir;
-
-        //Debug.DrawRay(position, forward);
     }
 
     Vector3 SteerTowards (Vector3 vector) {
         Vector3 v = vector.normalized * settings.maxSpeed - velocity;
         return Vector3.ClampMagnitude (v, settings.maxSteerForce);
+    }
+
+    float Synchronize (float stimulus) {
+        return stimulus - this.GetGlowOffset();
     }
 }
