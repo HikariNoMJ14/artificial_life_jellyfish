@@ -19,7 +19,9 @@ public class JellySpawner : MonoBehaviour {
             //jellyfish.transform.forward = Random.insideUnitSphere;
 
             //Debug.Log(jellyfish.transform.forward);
-            jellyfish.transform.forward = new Vector3(Random.Range(-.5f,.5f), 1, Random.Range(-.5f,.5f)).normalized;
+            jellyfish.transform.forward = new Vector3(Random.Range(-1f,1f), Random.Range(-1f,1f), Random.Range(-1f,1f)).normalized;
+            //jellyfish.transform.forward = new Vector3(Random.Range(-.5f,.5f), Random.Range(.0f,1f), Random.Range(-.5f,.5f)).normalized;
+            //jellyfish.transform.forward = new Vector3(Random.Range(-.5f,.5f), 1, Random.Range(-.5f,.5f)).normalized;
         }
     }
 

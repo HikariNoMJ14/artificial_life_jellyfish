@@ -7,11 +7,10 @@ struct Jelly {
     float glowOffset;
     float hue;
 
-    float3 separationDirection;
-    float3 alignmentDirection;
-    float3 cohesionDirection;
-
     int numFlockmates;
+    float3 flockCentre;
+    float3 flockDirection;
+    float3 separationDirection;
     float glowStimulus;
     float hueStimulus;
 };
@@ -33,19 +32,23 @@ void CSMain (int id : SV_DispatchThreadID)
             float3 offset = jellyB.position - jellys[id.x].position;
             float sqrDist = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
 
-            if (sqrDist < alignmentRadius * alignmentRadius) {
-                jellys[id.x].separationDirection -= jellyB.direction;
-            }
-            if (sqrDist < cohesionRadius * cohesionRadius) {
-                jellys[id.x].cohesionDirection += jellyB.direction;
-            }
-            if (sqrDist < separationRadius * separationRadius) {
-                jellys[id.x].alignmentDirection += jellyB.direction;
-            }
             if (sqrDist < neighborhoodRadius * neighborhoodRadius) {
-                jellys[id.x].numFlockmates += 1;
-                jellys[id.x].glowStimulus += jellyB.glowOffset;
-                jellys[id.x].hueStimulus += jellyB.hue;
+
+                if (sqrDist < alignmentRadius * alignmentRadius) {
+                    jellys[id.x].flockDirection += jellyB.direction;
+
+                    if (sqrDist < cohesionRadius * cohesionRadius) {
+                        jellys[id.x].numFlockmates += 1;
+                        jellys[id.x].flockCentre += jellyB.position;
+
+                        jellys[id.x].glowStimulus += jellyB.glowOffset;
+                        jellys[id.x].hueStimulus += jellyB.hue;
+
+                        if (sqrDist < separationRadius * separationRadius) {
+                            jellys[id.x].separationDirection -= offset / sqrDist;
+                        }
+                    }
+                }
             }
         }
     }

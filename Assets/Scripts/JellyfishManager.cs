@@ -39,21 +39,20 @@ public class JellyfishManager : MonoBehaviour {
 
             compute.SetBuffer (0, "jellys", jellyfishBuffer);
             compute.SetInt ("numJelly", numJellyfish);
-            compute.SetFloat ("neighborhoodRadius", settings.neighborhoodRadius);
-            compute.SetFloat ("separationRadius", settings.separationRadius);
-            compute.SetFloat ("alignmentRadius", settings.alignmentRadius);
-            compute.SetFloat ("cohesionRadius", settings.cohesionRadius);
+            compute.SetFloat ("neighborhoodRadius", settings.neighborhoodRadius());
+            compute.SetFloat ("separationRadius", settings.separationRadius());
+            compute.SetFloat ("alignmentRadius", settings.alignmentRadius());
+            compute.SetFloat ("cohesionRadius", settings.cohesionRadius());
 
             compute.Dispatch (0, threadGroups, 1, 1);
 
             jellyfishBuffer.GetData (jellyfishData);
 
             for (int i = 0; i < jellyfish.Length; i++) {
-                jellyfish[i].separationDirection = jellyfishData[i].separationDirection;
-                jellyfish[i].alignmentDirection = jellyfishData[i].alignmentDirection;
-                jellyfish[i].cohesionDirection = jellyfishData[i].cohesionDirection;
-
                 jellyfish[i].numFlockmates = jellyfishData[i].numFlockmates;
+                jellyfish[i].separationDirection = jellyfishData[i].separationDirection;
+                jellyfish[i].flockDirection = jellyfishData[i].flockDirection;
+                jellyfish[i].flockCentre = jellyfishData[i].flockCentre;
                 jellyfish[i].glowStimulus = jellyfishData[i].glowStimulus;
                 jellyfish[i].hueStimulus = jellyfishData[i].hueStimulus;
 
@@ -72,11 +71,10 @@ public class JellyfishManager : MonoBehaviour {
         public float glowOffset;
         public float hue;
 
-        public Vector3 separationDirection;
-        public Vector3 alignmentDirection;
-        public Vector3 cohesionDirection;
-
         public int numFlockmates;
+        public Vector3 flockCentre;
+        public Vector3 flockDirection;
+        public Vector3 separationDirection;
         public float glowStimulus;
         public float hueStimulus;
 

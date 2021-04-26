@@ -16,13 +16,13 @@ public class Jellyfish : MonoBehaviour {
     // To update:
     Vector3 acceleration;
     [HideInInspector]
-    public Vector3 separationDirection;
-    [HideInInspector]
-    public Vector3 alignmentDirection;
-    [HideInInspector]
-    public Vector3 cohesionDirection;
-    [HideInInspector]
     public int numFlockmates;
+    [HideInInspector]
+    public Vector3 flockCentre;
+    [HideInInspector]
+    public Vector3 flockDirection;
+    [HideInInspector]
+    public Vector3 separationDirection;
     [HideInInspector]
     public float glowStimulus;
     [HideInInspector]
@@ -41,11 +41,34 @@ public class Jellyfish : MonoBehaviour {
     }
 
     public float GetHue() {
-       return material.GetColor("_Color")[0];
+       float hue, sat, bright;
+       Color rgbColor =  material.GetColor("_Color");
+       Color.RGBToHSV(rgbColor, out hue, out sat, out bright);
+
+       return hue;
+    }
+
+    public float convertHue(float hue) {
+        return (Mathf.Sin(hue + 4)  + 1) / 2;
     }
 
     public void SetHue(float hue) {
-        Color clr =  Color.HSVToRGB(hue, settings.saturation, settings.brightness);
+        Color clr = Color.HSVToRGB(this.convertHue(hue), settings.saturation, settings.brightness);
+
+        material.SetColor("_Color", clr);
+    }
+
+    public float GetSaturation() {
+       float hue, sat, bright;
+       Color rgbColor =  material.GetColor("_Color");
+       Color.RGBToHSV(rgbColor, out hue, out sat, out bright);
+
+       return sat;
+    }
+
+
+    public void SetSaturation(float saturation) {
+        Color clr =  Color.HSVToRGB(this.GetHue(), saturation, settings.brightness);
 
         material.SetColor("_Color", clr);
     }
@@ -64,30 +87,40 @@ public class Jellyfish : MonoBehaviour {
         float startSpeed = (settings.minSpeed + settings.maxSpeed) / 2;
         velocity = transform.forward * startSpeed;
 
-        this.SetHue(Random.Range(.0f,1.0f));
-        this.SetGlowOffset(Random.Range(-Mathf.PI, Mathf.PI));
+        //this.SetHue(-2f);
+        this.SetHue(Random.Range(-Mathf.PI, Mathf.PI));
+        this.SetGlowOffset(0f);
+        //this.SetGlowOffset(Random.Range(-Mathf.PI, Mathf.PI));
     }
 
     public void UpdateJellyfish () {
         Vector3 acceleration = Vector3.zero;
 
         if (numFlockmates != 0) {
-            var separationForce = SteerTowards (separationDirection) * settings.separateWeight; // TODO use separation strength
-            var alignmentForce = SteerTowards (alignmentDirection) * settings.alignmentWeight;
-            var cohesionForce = SteerTowards (cohesionDirection) * settings.cohesionWeight;
+            flockCentre /= numFlockmates;
 
+            Vector3 distanceToFlockmatesCentre = (flockCentre - position);
+
+            var separationForce = SteerTowards (separationDirection) * settings.separateWeight;
+            var alignmentForce = SteerTowards (flockDirection) * settings.alignmentWeight;
+            var cohesionForce = SteerTowards (distanceToFlockmatesCentre) * settings.cohesionWeight;
+
+            acceleration += separationForce;
             acceleration += alignmentForce;
             acceleration += cohesionForce;
-            acceleration += separationForce;
 
-            //Debug.Log("Glow offset :" + this.GetGlowOffset());
-            //Debug.Log("Hue :" + this.GetHue());
+            SynchronizeGlow(glowStimulus);
+            SynchronizeHue(hueStimulus);
 
-            //SynchronizeGlow(glowStimulus);
-            //SynchronizeHue(hueStimulus);
+            //Debug.Log(this.GetGlowOffset());
+            //Debug.Log("N flockmates: " + numFlockmates);
+
         } else {
-            // TODO add random movement
+            var randomForce = SteerTowards (new Vector3(Random.Range(-1f,1f), Random.Range(-1f,.1f), Random.Range(-1f,1f))) * settings.randomWeight;
+            acceleration += randomForce;
         }
+
+        //UpdateSaturation();
 
         //if (IsHeadingForCollision ()) {
         //    Vector3 collisionAvoidDir = ObstacleRays ();
@@ -113,20 +146,29 @@ public class Jellyfish : MonoBehaviour {
     }
 
     void SynchronizeGlow (float glowStimulus) {
-        float glowSynchronizatonForce = ((glowStimulus / numFlockmates) - this.GetGlowOffset()) * settings.synchronizeWeight;
+        float glowSynchronizatonForce = ((glowStimulus / numFlockmates) - this.GetGlowOffset()) * settings.synchronizeGlowWeight;
 
-        if (glowSynchronizatonForce <= settings.minGlowSynchronizationForce) {
-            float newGlowOffset = glowSynchronizatonForce + this.GetGlowOffset();
-            this.SetGlowOffset(newGlowOffset);
-        }
+        float newGlowOffset = glowSynchronizatonForce + this.GetGlowOffset();
+        this.SetGlowOffset(newGlowOffset);
+    }
+
+    void UpdateSaturation() {
+        float saturationForce = (Mathf.Clamp(Mathf.Log(numFlockmates * 2.0f), 0f, settings.saturation) - this.GetSaturation()) * settings.synchronizeSaturationWeight;
+        float newSaturation = saturationForce + this.GetSaturation();
+
+        Debug.Log(newSaturation);
+
+        this.SetSaturation(newSaturation);
     }
 
     void SynchronizeHue (float hueStimulus) {
-        float hueSynchronizatonForce = ((hueStimulus / numFlockmates) - this.GetHue()) * settings.synchronizeWeight;
+        float hueSynchronizatonForce = ((hueStimulus / numFlockmates) - this.GetHue()) * settings.synchronizeHueWeight;
+        float newHue = hueSynchronizatonForce + this.GetHue();
 
-        if (hueSynchronizatonForce <= settings.minHueSynchronizationForce) {
-            float newHueOffset = hueSynchronizatonForce + this.GetHue();
-            //this.SetHue(newHueOffset);
+        //Debug.Log("Force " + hueSynchronizatonForce);
+        //Debug.Log("New " + newHue);
+        if (Mathf.Abs(hueSynchronizatonForce) > 0.0001f) {
+            this.SetHue(newHue);
         }
     }
 
