@@ -5,6 +5,7 @@ struct Jelly {
     float3 position;
     float3 direction;
     float glowOffset;
+    float hue;
 
     float3 separationDirection;
     float3 alignmentDirection;
@@ -12,6 +13,7 @@ struct Jelly {
 
     int numFlockmates;
     float glowStimulus;
+    float hueStimulus;
 };
 
 RWStructuredBuffer<Jelly> jellys;
@@ -43,6 +45,7 @@ void CSMain (int id : SV_DispatchThreadID)
             if (sqrDist < neighborhoodRadius * neighborhoodRadius) {
                 jellys[id.x].numFlockmates += 1;
                 jellys[id.x].glowStimulus += jellyB.glowOffset;
+                jellys[id.x].hueStimulus += jellyB.hue;
             }
         }
     }

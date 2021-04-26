@@ -25,7 +25,8 @@ public class Jellyfish : MonoBehaviour {
     public int numFlockmates;
     [HideInInspector]
     public float glowStimulus;
-
+    [HideInInspector]
+    public float hueStimulus;
 
     // Cached
     Material material;
@@ -39,12 +40,12 @@ public class Jellyfish : MonoBehaviour {
         material.SetFloat("GlowOffset", offset);
     }
 
-    public float GetColour() {
+    public float GetHue() {
        return material.GetColor("_Color")[0];
     }
 
-    public void SetColour(float hue, float saturation, float brightness) {
-        Color clr =  Color.HSVToRGB(hue, saturation, brightness);
+    public void SetHue(float hue) {
+        Color clr =  Color.HSVToRGB(hue, settings.saturation, settings.brightness);
 
         material.SetColor("_Color", clr);
     }
@@ -62,6 +63,9 @@ public class Jellyfish : MonoBehaviour {
 
         float startSpeed = (settings.minSpeed + settings.maxSpeed) / 2;
         velocity = transform.forward * startSpeed;
+
+        this.SetHue(Random.Range(.0f,1.0f));
+        this.SetGlowOffset(Random.Range(-Mathf.PI, Mathf.PI));
     }
 
     public void UpdateJellyfish () {
@@ -76,12 +80,20 @@ public class Jellyfish : MonoBehaviour {
             acceleration += cohesionForce;
             acceleration += separationForce;
 
-            float synchronizatonForce = Synchronize(glowStimulus / numFlockmates) * settings.synchronizeWeight;
-            float newGlowOffset = synchronizatonForce + this.GetGlowOffset();
-            this.SetGlowOffset(newGlowOffset);
+            //Debug.Log("Glow offset :" + this.GetGlowOffset());
+            //Debug.Log("Hue :" + this.GetHue());
+
+            //SynchronizeGlow(glowStimulus);
+            //SynchronizeHue(hueStimulus);
         } else {
             // TODO add random movement
         }
+
+        //if (IsHeadingForCollision ()) {
+        //    Vector3 collisionAvoidDir = ObstacleRays ();
+        //   Vector3 collisionAvoidForce = SteerTowards (collisionAvoidDir) * settings.avoidCollisionWeight;
+        //    acceleration += collisionAvoidForce;
+        //}
 
         velocity += acceleration * Time.deltaTime;
         float speed = velocity.magnitude;
@@ -100,7 +112,43 @@ public class Jellyfish : MonoBehaviour {
         return Vector3.ClampMagnitude (v, settings.maxSteerForce);
     }
 
-    float Synchronize (float stimulus) {
-        return stimulus - this.GetGlowOffset();
+    void SynchronizeGlow (float glowStimulus) {
+        float glowSynchronizatonForce = ((glowStimulus / numFlockmates) - this.GetGlowOffset()) * settings.synchronizeWeight;
+
+        if (glowSynchronizatonForce <= settings.minGlowSynchronizationForce) {
+            float newGlowOffset = glowSynchronizatonForce + this.GetGlowOffset();
+            this.SetGlowOffset(newGlowOffset);
+        }
+    }
+
+    void SynchronizeHue (float hueStimulus) {
+        float hueSynchronizatonForce = ((hueStimulus / numFlockmates) - this.GetHue()) * settings.synchronizeWeight;
+
+        if (hueSynchronizatonForce <= settings.minHueSynchronizationForce) {
+            float newHueOffset = hueSynchronizatonForce + this.GetHue();
+            //this.SetHue(newHueOffset);
+        }
+    }
+
+    bool IsHeadingForCollision () {
+        RaycastHit hit;
+        if (Physics.SphereCast (position, settings.boundsRadius, forward, out hit, settings.collisionAvoidDst, settings.obstacleMask)) {
+            return true;
+        } else { }
+        return false;
+    }
+
+    Vector3 ObstacleRays () {
+        Vector3[] rayDirections = JellyfishHelper.directions;
+
+        for (int i = 0; i < rayDirections.Length; i++) {
+            Vector3 dir = cachedTransform.TransformDirection (rayDirections[i]);
+            Ray ray = new Ray (position, dir);
+            if (!Physics.SphereCast (ray, settings.boundsRadius, settings.collisionAvoidDst, settings.obstacleMask)) {
+                return dir;
+            }
+        }
+
+        return forward;
     }
 }

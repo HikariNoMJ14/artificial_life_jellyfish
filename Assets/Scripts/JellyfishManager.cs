@@ -31,6 +31,7 @@ public class JellyfishManager : MonoBehaviour {
                 jellyfishData[i].direction = jellyfish[i].forward;
 
                 jellyfishData[i].glowOffset = jellyfish[i].GetGlowOffset();
+                jellyfishData[i].hue = jellyfish[i].GetHue();
             }
 
             var jellyfishBuffer = new ComputeBuffer (numJellyfish, JellyfishData.Size);
@@ -54,6 +55,7 @@ public class JellyfishManager : MonoBehaviour {
 
                 jellyfish[i].numFlockmates = jellyfishData[i].numFlockmates;
                 jellyfish[i].glowStimulus = jellyfishData[i].glowStimulus;
+                jellyfish[i].hueStimulus = jellyfishData[i].hueStimulus;
 
                 jellyfish[i].UpdateJellyfish ();
             }
@@ -68,6 +70,7 @@ public class JellyfishManager : MonoBehaviour {
         public Vector3 position;
         public Vector3 direction;
         public float glowOffset;
+        public float hue;
 
         public Vector3 separationDirection;
         public Vector3 alignmentDirection;
@@ -75,10 +78,11 @@ public class JellyfishManager : MonoBehaviour {
 
         public int numFlockmates;
         public float glowStimulus;
+        public float hueStimulus;
 
         public static int Size {
             get {
-                return sizeof (float) * 3 * 5 + sizeof (float) * 2 + sizeof (int);
+                return sizeof (float) * 3 * 5 + sizeof (float) * 4 + sizeof (int);
             }
         }
     }
