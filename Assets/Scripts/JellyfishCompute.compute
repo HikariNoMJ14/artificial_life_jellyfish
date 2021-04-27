@@ -13,6 +13,8 @@ struct Jelly {
     float3 separationDirection;
     float glowStimulus;
     float hueStimulus;
+
+    float species;
 };
 
 RWStructuredBuffer<Jelly> jellys;
@@ -32,7 +34,7 @@ void CSMain (int id : SV_DispatchThreadID)
             float3 offset = jellyB.position - jellys[id.x].position;
             float sqrDist = offset.x * offset.x + offset.y * offset.y + offset.z * offset.z;
 
-            if (sqrDist < neighborhoodRadius * neighborhoodRadius) {
+            if (jellyB.species == jellys[id.x].species) {
 
                 if (sqrDist < alignmentRadius * alignmentRadius) {
                     jellys[id.x].flockDirection += jellyB.direction;

@@ -12,9 +12,11 @@ public class JellySpawner : MonoBehaviour {
     public GizmoType showSpawnRegion;
 
     void Awake () {
+        float species = Random.Range(0f,1f);
         for (int i = 0; i < spawnCount; i++) {
             Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
             Jellyfish jellyfish = Instantiate (prefab);
+            jellyfish.species = species;
             jellyfish.transform.position = pos;
             //jellyfish.transform.position = new Vector3(0,0,0);
             //jellyfish.transform.forward = Random.insideUnitSphere;

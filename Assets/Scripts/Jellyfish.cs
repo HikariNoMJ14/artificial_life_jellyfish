@@ -32,12 +32,18 @@ public class Jellyfish : MonoBehaviour {
     Material material;
     Transform cachedTransform;
 
+    public float species;
+
     public float GetGlowOffset() {
         return material.GetFloat("GlowOffset");
     }
 
     public void SetGlowOffset(float offset) {
         material.SetFloat("GlowOffset", offset);
+    }
+
+    public void SetGlowSpeed(float offset) {
+        material.SetFloat("GlowSpeed", offset);
     }
 
     public float GetHue() {
@@ -83,10 +89,15 @@ public class Jellyfish : MonoBehaviour {
         //float startSpeed = settings.minSpeed;
         velocity = transform.forward * startSpeed;
 
-        //this.SetHue(0.25f);
-        this.SetHue(Random.Range(0f, 1f));
+        this.SetHue(species);
+        //this.SetHue(Random.Range(0f, 1f));
         //this.SetGlowOffset(0f);
-        this.SetGlowOffset(Random.Range(-Mathf.PI, Mathf.PI));
+
+        float glowOffsetMin = Mathf.PI * species;
+        float glowOffsetMax = -Mathf.PI * (1 - species);
+        this.SetGlowOffset(Random.Range(glowOffsetMin, glowOffsetMax));
+        //this.SetGlowOffset(Random.Range(-Mathf.PI, Mathf.PI));
+        this.SetGlowSpeed(5f * species + 2.5f);
     }
 
     public void UpdateJellyfish () {
@@ -152,7 +163,7 @@ public class Jellyfish : MonoBehaviour {
         float saturationForce = (Mathf.Clamp(Mathf.Log(numFlockmates * 2.0f), 0f, settings.saturation) - this.GetSaturation()) * settings.synchronizeSaturationWeight;
         float newSaturation = saturationForce + this.GetSaturation();
 
-        Debug.Log(newSaturation);
+        //  Debug.Log(newSaturation);
 
         this.SetSaturation(newSaturation);
     }
