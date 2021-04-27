@@ -73,7 +73,7 @@ Material:
     m_Floats:
     - GlowOffset: 0
     - GlowSpeed: 2.5
-    - GlowStrength: 1.5
+    - GlowStrength: 1
     - Metallic: 0
     - MovementSpeed: 4
     - RotationAngle: 1.37

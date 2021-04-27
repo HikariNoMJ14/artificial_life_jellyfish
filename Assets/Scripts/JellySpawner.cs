@@ -16,12 +16,14 @@ public class JellySpawner : MonoBehaviour {
             Vector3 pos = transform.position + Random.insideUnitSphere * spawnRadius;
             Jellyfish jellyfish = Instantiate (prefab);
             jellyfish.transform.position = pos;
+            //jellyfish.transform.position = new Vector3(0,0,0);
             //jellyfish.transform.forward = Random.insideUnitSphere;
 
             //Debug.Log(jellyfish.transform.forward);
-            jellyfish.transform.forward = new Vector3(Random.Range(-1f,1f), Random.Range(-1f,1f), Random.Range(-1f,1f)).normalized;
-            //jellyfish.transform.forward = new Vector3(Random.Range(-.5f,.5f), Random.Range(.0f,1f), Random.Range(-.5f,.5f)).normalized;
-            //jellyfish.transform.forward = new Vector3(Random.Range(-.5f,.5f), 1, Random.Range(-.5f,.5f)).normalized;
+            //jellyfish.transform.forward = new Vector3(Random.Range(-1f,1f), Random.Range(-1f,1f), Random.Range(-1f,1f)).normalized;
+            //jellyfish.transform.forward = new Vector3(Random.Range(-.8f,.8f), Random.Range(.5f,.1f), Random.Range(-.8f,.8f)).normalized;
+            jellyfish.transform.forward = new Vector3(Random.Range(-.5f,.5f), Random.Range(-.2f,1f), Random.Range(-.5f,.5f)).normalized;
+            //jellyfish.transform.forward = new Vector3(0f, 1f, 0f).normalized;
         }
     }
 
