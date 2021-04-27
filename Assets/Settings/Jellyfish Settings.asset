@@ -14,20 +14,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minSpeed: 2
   maxSpeed: 5
-  maxSteerForce: 10
+  maxSteerForce: 8
   saturation: 0.8
   brightness: 1
-  baseRadius: 15
+  baseRadius: 10
   neighborhoodRadiusPerc: 1
   separationRadiusPerc: 0.2
   alignmentRadiusPerc: 0.4
-  cohesionRadiusPerc: 0.65
+  cohesionRadiusPerc: 0.8
   separateWeight: 1
   alignmentWeight: 0.2
   cohesionWeight: 0.4
   randomWeight: 0.1
   synchronizeGlowWeight: 0.01
-  synchronizeHueWeight: 0.01
+  synchronizeHueWeight: 0.001
   synchronizeSaturationWeight: 0.1
   obstacleMask:
     serializedVersion: 2

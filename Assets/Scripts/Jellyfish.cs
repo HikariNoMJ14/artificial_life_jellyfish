@@ -45,11 +45,11 @@ public class Jellyfish : MonoBehaviour {
        Color rgbColor =  material.GetColor("_Color");
        Color.RGBToHSV(rgbColor, out hue, out sat, out bright);
 
-       return hue;
+       return Mathf.Asin (2 * hue - 1) * 2;
     }
 
     public float convertHue(float hue) {
-        return (Mathf.Sin(hue + 4)  + 1) / 2;
+        return (Mathf.Sin(2 * hue) + 1) / 2;
     }
 
     public void SetHue(float hue) {
@@ -65,7 +65,6 @@ public class Jellyfish : MonoBehaviour {
 
        return sat;
     }
-
 
     public void SetSaturation(float saturation) {
         Color clr =  Color.HSVToRGB(this.GetHue(), saturation, settings.brightness);
@@ -89,8 +88,8 @@ public class Jellyfish : MonoBehaviour {
 
         //this.SetHue(-2f);
         this.SetHue(Random.Range(-Mathf.PI, Mathf.PI));
-        this.SetGlowOffset(0f);
-        //this.SetGlowOffset(Random.Range(-Mathf.PI, Mathf.PI));
+        //this.SetGlowOffset(0f);
+        this.SetGlowOffset(Random.Range(-Mathf.PI, Mathf.PI));
     }
 
     public void UpdateJellyfish () {
@@ -147,8 +146,8 @@ public class Jellyfish : MonoBehaviour {
 
     void SynchronizeGlow (float glowStimulus) {
         float glowSynchronizatonForce = ((glowStimulus / numFlockmates) - this.GetGlowOffset()) * settings.synchronizeGlowWeight;
-
         float newGlowOffset = glowSynchronizatonForce + this.GetGlowOffset();
+
         this.SetGlowOffset(newGlowOffset);
     }
 
@@ -156,20 +155,22 @@ public class Jellyfish : MonoBehaviour {
         float saturationForce = (Mathf.Clamp(Mathf.Log(numFlockmates * 2.0f), 0f, settings.saturation) - this.GetSaturation()) * settings.synchronizeSaturationWeight;
         float newSaturation = saturationForce + this.GetSaturation();
 
-        Debug.Log(newSaturation);
-
         this.SetSaturation(newSaturation);
     }
 
     void SynchronizeHue (float hueStimulus) {
-        float hueSynchronizatonForce = ((hueStimulus / numFlockmates) - this.GetHue()) * settings.synchronizeHueWeight;
+        float hueSynchronizatonForce = ((hueStimulus / numFlockmates) - this.GetHue());
+
+        if (hueSynchronizatonForce > Mathf.PI) {
+            hueSynchronizatonForce -= 2 * Mathf.PI;
+        } else if (hueSynchronizatonForce <= -Mathf.PI) {
+            hueSynchronizatonForce = 2 * Mathf.PI + hueSynchronizatonForce;
+        }
+
+        hueSynchronizatonForce *= settings.synchronizeHueWeight;
         float newHue = hueSynchronizatonForce + this.GetHue();
 
-        //Debug.Log("Force " + hueSynchronizatonForce);
-        //Debug.Log("New " + newHue);
-        if (Mathf.Abs(hueSynchronizatonForce) > 0.0001f) {
-            this.SetHue(newHue);
-        }
+        this.SetHue(newHue);
     }
 
     bool IsHeadingForCollision () {
